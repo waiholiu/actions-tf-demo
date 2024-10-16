@@ -11,7 +11,12 @@ run terraform plan
 run terraform apply
 
 
-# steps 2
+# steps 2 - get a actions working to do the deployment
+- run setup-serviceprincipal on the right branch
+- set up secrets in the github repo using the output from the setup-serviceprincipal
+- check it in
+
+
 
 
 
