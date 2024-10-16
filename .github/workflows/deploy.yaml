@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
+  deploydev:
     runs-on: ubuntu-latest
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -48,6 +48,45 @@ jobs:
 
     - name: Terraform Apply
       run: terraform apply -auto-approve -var="env=dev"
+
+  deploytest:
+    runs-on: ubuntu-latest
+    env:
+        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        ARM_USE_OIDC: true
+
+    steps:
+    - name: Checkout code
+        uses: actions/checkout@v2
+
+    - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+        addSpnToEnvironment: true
+
+    - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+    
+    - name: 'List all Resource Groups'
+        run: az group list --output table
+
+
+    - name: Terraform Init
+        run: | 
+        terraform init \
+        -backend-config="resource_group_name=tfstate-rg" \
+        -backend-config="storage_account_name=tfstatewai" \
+        -backend-config="container_name=actionsworkshop" \
+        -backend-config="key=test"
+
+    - name: Terraform Apply
+        run: terraform apply -auto-approve -var="env=test"
     
 
 
