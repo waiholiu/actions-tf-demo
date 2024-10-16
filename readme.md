@@ -21,6 +21,8 @@ run terraform apply
 - add a variable.tf file and add env variable
 - in deploy.yaml, pass in backend-config in the terraform init 
 - in main.tf and everywhere else, use the env variable to set the names of the components
+- in deploy.yaml, add a couple more environments and remember to use needs
+
 - 
 
 
