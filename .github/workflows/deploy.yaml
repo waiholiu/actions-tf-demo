@@ -44,10 +44,10 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan  -var="env=dev"
+
   deploydev:
-    runs-on: ubuntu-latest
-    needs: plandev
     uses: ./.github/workflows/deployToEnv.yaml
+    needs: plandev
     with:
       environment: dev
       backend_key: dev
