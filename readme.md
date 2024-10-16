@@ -17,6 +17,10 @@ run terraform apply
 - check it in
 
 
+# steps 3 - deploy to multiple environments
+- add a variable.tf file
+- set up secrets in the github repo using the output from the setup-serviceprincipal
+- check it in
 
 
 
