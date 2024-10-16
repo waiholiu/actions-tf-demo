@@ -23,6 +23,10 @@ run terraform apply
 - in main.tf and everywhere else, use the env variable to set the names of the components
 - in deploy.yaml, add a couple more environments and remember to use needs
 
+
+# steps 4 - add in an approval process
+- add in protection rules
+- add in environments into yaml file
 - 
 
 
