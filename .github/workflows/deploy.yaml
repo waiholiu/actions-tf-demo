@@ -45,10 +45,10 @@ jobs:
         -backend-config="resource_group_name=tfstate-rg" \
         -backend-config="storage_account_name=tfstatewai" \
         -backend-config="container_name=actionsworkshop" \
-        -backend-config="key=$KEY"
+        -backend-config="key=${{vars.KEY}}"
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve -var="env=$KEY"
+      run: terraform apply -auto-approve -var="env=${{vars.KEY}}"
 
   deploytest:
     runs-on: ubuntu-latest
@@ -86,7 +86,7 @@ jobs:
         -backend-config="resource_group_name=tfstate-rg" \
         -backend-config="storage_account_name=tfstatewai" \
         -backend-config="container_name=actionsworkshop" \
-        -backend-config="key=$KEY"
+        -backend-config="key=${{vars.KEY}}"
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve -var="env=$KEY"
+      run: terraform apply -auto-approve -var="env=${{vars.KEY}}"
