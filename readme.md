@@ -18,9 +18,10 @@ run terraform apply
 
 
 # steps 3 - deploy to multiple environments
-- add a variable.tf file
-- set up secrets in the github repo using the output from the setup-serviceprincipal
-- check it in
+- add a variable.tf file and add env variable
+- in deploy.yaml, pass in backend-config in the terraform init 
+- in main.tf and everywhere else, use the env variable to set the names of the components
+- 
 
 
 
