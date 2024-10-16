@@ -31,13 +31,14 @@ run terraform apply
 
 
 # step 5 - show a plan before applying
-- add in a manual step
+- add in an extra step to 
 - 
 
 
 
 # step 6 - use reusable modules
 
+- create a seperate file for the deploy and reference it
 
 
 
