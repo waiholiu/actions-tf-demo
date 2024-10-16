@@ -10,83 +10,51 @@ permissions:
   contents: read
 
 jobs:
-
   plandev:
-        runs-on: ubuntu-latest
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true
-    
-        steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
-    
-        - name: 'Login via Azure CLI'
-          uses: azure/login@v1
-          with:
-            client-id: ${{ secrets.AZURE_CLIENT_ID }}
-            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-            subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
-            addSpnToEnvironment: true
-    
-        - name: Set up Terraform
-          uses: hashicorp/setup-terraform@v3
-    
-        - name: Terraform Init
-          run: | 
-            terraform init \
-            -backend-config="resource_group_name=tfstate-rg" \
-            -backend-config="storage_account_name=tfstatewai" \
-            -backend-config="container_name=actionsworkshop" \
-            -backend-config="key=dev"
-    
-        - name: Terraform Plan
-          id: plan
-          run: terraform plan  -var="env=dev"
-
-
-  deploydev:
     runs-on: ubuntu-latest
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       ARM_USE_OIDC: true
-      name: dev-env
-    needs: plandev
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: 'Login via Azure CLI'
-      uses: azure/login@v1
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
-        addSpnToEnvironment: true
+      - name: "Login via Azure CLI"
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+          addSpnToEnvironment: true
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v3
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
 
-    
-    - name: 'List all Resource Groups'
-      run: az group list --output table
+      - name: Terraform Init
+        run: |
+          terraform init \
+          -backend-config="resource_group_name=tfstate-rg" \
+          -backend-config="storage_account_name=tfstatewai" \
+          -backend-config="container_name=actionsworkshop" \
+          -backend-config="key=dev"
 
-
-    - name: Terraform Init
-      run: | 
-        terraform init \
-        -backend-config="resource_group_name=tfstate-rg" \
-        -backend-config="storage_account_name=tfstatewai" \
-        -backend-config="container_name=actionsworkshop" \
-        -backend-config="key=dev"
-
-    - name: Terraform Apply
-      run: terraform apply -auto-approve -var="env=dev"
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan  -var="env=dev"
+  deploydev:
+    runs-on: ubuntu-latest
+    needs: plandev
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: dev
+      backend_key: dev
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
 
   deploytest:
     runs-on: ubuntu-latest
@@ -99,32 +67,30 @@ jobs:
     needs: deploydev
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: 'Login via Azure CLI'
-      uses: azure/login@v1
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
-        addSpnToEnvironment: true
+      - name: "Login via Azure CLI"
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+          addSpnToEnvironment: true
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v3
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
 
-    
-    - name: 'List all Resource Groups'
-      run: az group list --output table
+      - name: "List all Resource Groups"
+        run: az group list --output table
 
+      - name: Terraform Init
+        run: |
+          terraform init \
+          -backend-config="resource_group_name=tfstate-rg" \
+          -backend-config="storage_account_name=tfstatewai" \
+          -backend-config="container_name=actionsworkshop" \
+          -backend-config="key=test"
 
-    - name: Terraform Init
-      run: | 
-        terraform init \
-        -backend-config="resource_group_name=tfstate-rg" \
-        -backend-config="storage_account_name=tfstatewai" \
-        -backend-config="container_name=actionsworkshop" \
-        -backend-config="key=test"
-
-    - name: Terraform Apply
-      run: terraform apply -auto-approve -var="env=test"
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -var="env=test"
