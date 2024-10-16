@@ -3,10 +3,10 @@
 
 
 # Define variable for display name
-DISPLAY_NAME="actions-tf-demo-oidc"
+DISPLAY_NAME="actions-tf-demo-master-oidc"
 # Define variables for name and subject
-FEDERATED_IDENTITY_NAME="actions-tf-actions-federated-identity"
-FEDERATED_IDENTITY_SUBJECT="repo:waiholiu/actions-tf-demo:ref:refs/heads/Challenge2"
+FEDERATED_IDENTITY_NAME="actions-tf-actions-master-federated-identity"
+FEDERATED_IDENTITY_SUBJECT="repo:waiholiu/actions-tf-demo:ref:refs/heads/master"
 
 
 AZURE_TENANT=$(az account show -o tsv --query tenantId)

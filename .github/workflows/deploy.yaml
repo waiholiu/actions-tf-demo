@@ -39,8 +39,14 @@ jobs:
 
 
     - name: Terraform Init
-      run: terraform init
+      run: terraform init 
+        -backend-config="resource_group_name=tfstate-rg" \
+        -backend-config="storage_account_name=tfstatewai" \
+        -backend-config="container_name=actionsworkshop" \
+        -backend-config="key=dev"
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve -var="env=dev"
     
+
+
