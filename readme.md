@@ -22,11 +22,13 @@ run terraform apply
 - in deploy.yaml, pass in backend-config in the terraform init 
 - in main.tf and everywhere else, use the env variable to set the names of the components
 - in deploy.yaml, add a couple more environments and remember to use needs
+- add in environment variable key = dev as envrionment variables 
 
 
 # steps 4 - add in an approval process
 - add in protection rules
 - add in environments into yaml file
+
 
 # step 5 - show a plan before applying
 - add in the PR workflow
