@@ -27,7 +27,15 @@ run terraform apply
 # steps 4 - add in an approval process
 - add in protection rules
 - add in environments into yaml file
+
+# step 5 - show a plan before applying
+- add in the PR workflow
 - 
+
+
+
+# step 6 - use reusable modules
+
 
 
 
