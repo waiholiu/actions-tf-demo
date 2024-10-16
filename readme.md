@@ -31,7 +31,7 @@ run terraform apply
 
 
 # step 5 - show a plan before applying
-- add in the PR workflow
+- add in a manual step
 - 
 
 
